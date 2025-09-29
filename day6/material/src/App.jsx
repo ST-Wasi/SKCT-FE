@@ -5,23 +5,36 @@ import './App.css'
 import BasicCard from './componnets/BasicCard'
 import Box from '@mui/material/Box'
 import axios from "axios"
+import CircularProgress from '@mui/material/CircularProgress'
 
 function App() {
   const [count, setCount] = useState(0)
   const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(false)
 
   async function getData() {
     try {
+      setLoading(true)
       const response = await axios.get("https://jsonplaceholder.typicode.com/posts")
       setPosts(response.data)
+      setLoading(false)
     } catch (error) {
       console.log("Error: ", error)
+    } finally {
+      setLoading(false)
     }
   }
 
   useEffect(() => {
     getData()
   }, [])
+
+
+  if (loading) {
+    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+      <CircularProgress color="success" />
+    </div>
+  }
 
   return (
     <>
